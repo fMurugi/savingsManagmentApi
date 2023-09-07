@@ -13,19 +13,19 @@ import java.util.UUID;
 @Data
 public class CustomerPayload {
     @NotBlank(message = "First name is required")
-    private String firstname;
+    private String firstName;
     @NotBlank(message = "last name is required")
-    private String lastname;
+    private String lastName;
     @NotBlank(message="national id is required")
-    @Pattern(regexp = "\\d{8}", message = "National ID must be an 8-digit number")
     private int nationalId;
     @NotBlank(message = "phone number is required")
-    @Pattern(regexp = "^[0-9]{10}$", message = "Phone number must be a 10-digit number")
     private int phoneNumber;
+
+
     @NotBlank(message = "Email is required")
     @Email(message = "email should be valid")
     private String email;
     @NotNull(message = "Savings product IDs are required")
-    private List<UUID> savingsProductIds;
+    private List<UUID> savingsProducts;
 
 }

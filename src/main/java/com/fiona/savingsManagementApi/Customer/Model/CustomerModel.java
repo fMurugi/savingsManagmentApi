@@ -1,5 +1,7 @@
 package com.fiona.savingsManagementApi.Customer.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fiona.savingsManagementApi.SavingsProduct.model.SavingsProductModel;
 import jakarta.persistence.*;
 import lombok.*;
@@ -30,10 +32,11 @@ public class CustomerModel {
     @Column(name ="email")
     private String email;
     @Column(name="member_number",unique = true)
-    private int memberNumber;
+    private String memberNumber;
     @ManyToMany
     @JoinTable(name = "customer_savings_product",
             joinColumns = @JoinColumn(name = "customer_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id"))
+    @JsonManagedReference
     private List<SavingsProductModel> savingsProducts = new ArrayList<>();
 }
