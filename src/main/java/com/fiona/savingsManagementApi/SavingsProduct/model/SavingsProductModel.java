@@ -1,5 +1,6 @@
 package com.fiona.savingsManagementApi.SavingsProduct.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fiona.savingsManagementApi.Customer.Model.CustomerModel;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -22,6 +23,7 @@ public class SavingsProductModel {
     private String name;
 
     @ManyToMany(mappedBy = "savingsProducts")
+    @JsonBackReference
     private List<CustomerModel> customers = new ArrayList<>();
 
 }
