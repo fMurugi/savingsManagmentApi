@@ -1,0 +1,27 @@
+package com.fiona.savingsManagementApi.SavingsProduct.model;
+
+import com.fiona.savingsManagementApi.Customer.Model.CustomerModel;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.*;
+
+@Entity
+@Table(name="savings_products")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class SavingsProductModel {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name="saving_product_id")
+    private UUID savingProductId;
+    @Column(name="name")
+    private String name;
+
+    @ManyToMany(mappedBy = "savingsProducts")
+    private List<CustomerModel> customers = new ArrayList<>();
+
+}
