@@ -1,5 +1,7 @@
 package com.fiona.savingsManagementApi.Customer.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fiona.savingsManagementApi.Customer.Model.CustomerModel;
 import com.fiona.savingsManagementApi.Customer.Payload.CustomerPayload;
 import com.fiona.savingsManagementApi.Customer.repository.CustomerRepository;
@@ -19,10 +21,10 @@ import java.util.*;
 public class CustomerService {
     private CustomerRepository customerRepository;
     private SavingsProductsRepository savingsProductsRepository;
-    private ModelMapper modelMapper;
+    private ObjectMapper objectMapper = new ObjectMapper();
     private static final Random random = new Random();
     //create a new customer
-    public CustomerModel createCustomer(CustomerPayload payload) {
+    public String createCustomer(CustomerPayload payload) {
         CustomerModel customerModel = new CustomerModel();
         customerModel.setFirstName(payload.getFirstName());
         customerModel.setLastName(payload.getLastName());
@@ -39,7 +41,15 @@ public class CustomerService {
             savingsProductOptional.ifPresent(savingsProductModelList::add);
         }
         customerModel.setSavingsProducts(savingsProductModelList);
-        return customerRepository.save(customerModel);
+         CustomerModel savedCustomer= customerRepository.save(customerModel);
+
+         try{
+             String json = objectMapper.writeValueAsString(savedCustomer);
+             return json;
+         } catch (JsonProcessingException e) {
+             throw new RuntimeException(e);
+         }
+
     }
 
     //get all customers
