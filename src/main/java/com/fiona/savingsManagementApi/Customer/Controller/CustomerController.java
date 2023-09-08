@@ -24,7 +24,7 @@ public class CustomerController {
     private CustomerService customerService;
 
     @PostMapping("/createANewCustomer")
-    public ResponseEntity<APiResponse> createCustomer(@RequestBody @Valid CustomerPayload payload, HttpServletRequest request){
+    public ResponseEntity<APiResponse> createCustomer(@Valid @RequestBody  CustomerPayload payload, HttpServletRequest request){
 
         CustomerModel CustomerModel = customerService.createCustomer(payload);
         return buildResponseEntity(HttpStatus.CREATED,CustomerModel,request.getRequestURI());

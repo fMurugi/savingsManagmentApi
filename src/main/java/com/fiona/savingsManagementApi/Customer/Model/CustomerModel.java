@@ -1,8 +1,10 @@
 package com.fiona.savingsManagementApi.Customer.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fiona.savingsManagementApi.SavingsProduct.model.SavingsProductModel;
+import com.fiona.savingsManagementApi.Transaction.model.TransactionModel;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,7 +30,7 @@ public class CustomerModel {
     @Column(name="id_number")
     private int nationalId;
     @Column(name="phone_number")
-    private int phoneNumber;
+    private String phoneNumber;
     @Column(name ="email")
     private String email;
     @Column(name="member_number",unique = true)
@@ -39,4 +41,5 @@ public class CustomerModel {
             inverseJoinColumns = @JoinColumn(name = "product_id"))
     @JsonManagedReference
     private List<SavingsProductModel> savingsProducts = new ArrayList<>();
+
 }

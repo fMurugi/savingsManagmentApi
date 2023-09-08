@@ -20,11 +20,10 @@ public class CustomerService {
     private CustomerRepository customerRepository;
     private SavingsProductsRepository savingsProductsRepository;
     private ModelMapper modelMapper;
-    private static   int counter = 0;
-
+    private static final Random random = new Random();
     //create a new customer
-    public CustomerModel createCustomer(CustomerPayload payload){
-        CustomerModel customerModel =new CustomerModel();
+    public CustomerModel createCustomer(CustomerPayload payload) {
+        CustomerModel customerModel = new CustomerModel();
         customerModel.setFirstName(payload.getFirstName());
         customerModel.setLastName(payload.getLastName());
         customerModel.setPhoneNumber(payload.getPhoneNumber());
@@ -33,9 +32,9 @@ public class CustomerService {
         String generatedMemberNumber = generateMemberNumber();
         customerModel.setMemberNumber(generatedMemberNumber);
 
-        List<SavingsProductModel>  savingsProductModelList = new ArrayList<>();
+        List<SavingsProductModel> savingsProductModelList = new ArrayList<>();
 
-        for(UUID id: payload.getSavingsProducts()){
+        for (UUID id : payload.getSavingsProducts()) {
             Optional<SavingsProductModel> savingsProductOptional = savingsProductsRepository.findById(id);
             savingsProductOptional.ifPresent(savingsProductModelList::add);
         }
@@ -44,17 +43,17 @@ public class CustomerService {
     }
 
     //get all customers
-    public List<CustomerModel> getAllCustomers(){
+    public List<CustomerModel> getAllCustomers() {
         return customerRepository.findAll();
     }
 
     //get one customer
-    public CustomerModel getOneCustomer(UUID id){
+    public CustomerModel getOneCustomer(UUID id) {
         return findCustomerById(id);
     }
 
     //update customer
-    public CustomerModel updateCustomerModel(CustomerPayload payload, UUID id){
+    public CustomerModel updateCustomerModel(CustomerPayload payload, UUID id) {
         CustomerModel customerModel = findCustomerById(id);
         customerModel.setFirstName(payload.getFirstName());
         customerModel.setLastName(payload.getLastName());
@@ -62,10 +61,10 @@ public class CustomerService {
         customerModel.setNationalId(payload.getNationalId());
         customerModel.setEmail(payload.getEmail());
 
-        if(payload.getSavingsProducts()!=null){
-            List<SavingsProductModel>  savingsProductModelList = new ArrayList<>();
+        if (payload.getSavingsProducts() != null) {
+            List<SavingsProductModel> savingsProductModelList = new ArrayList<>();
 
-            for(UUID savingsProductsId: payload.getSavingsProducts()){
+            for (UUID savingsProductsId : payload.getSavingsProducts()) {
 
                 Optional<SavingsProductModel> savingsProductOptional = savingsProductsRepository.findById(savingsProductsId);
                 savingsProductOptional.ifPresent(savingsProductModelList::add);
@@ -77,19 +76,26 @@ public class CustomerService {
     }
 
     //deleted customer
-    public String deleteCustomer(UUID id){
+    public String deleteCustomer(UUID id) {
         customerRepository.deleteById(id);
         return "Customer successfully deleted";
     }
 
 
     public static String generateMemberNumber() {
-        counter++;
-        String paddedCounter = String.format("%05d", counter); // Padded with leading zeros
+        int randomCounter = random.nextInt(10000);
+        String paddedCounter = String.format("%05d", randomCounter);
         return "M" + paddedCounter;
     }
 
     public CustomerModel findCustomerById(UUID id) {
-        return customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+        Optional<CustomerModel> customerModel = customerRepository.findById(id);
+
+        if (!customerModel.isPresent()) {
+            throw new ResourceNotFoundException("Customer.not found");
+        } else {
+            return customerModel.get();
+        }
+
     }
 }
