@@ -25,7 +25,7 @@ public class SavingsProductsController {
     private SavingsProductsService savingsProductsService;
 
     @PostMapping("/createSavingsProduct")
-    public ResponseEntity<APiResponse> createSavingsProduct(@RequestBody @Valid SavingsProductPayload payload, HttpServletRequest request){
+    public ResponseEntity<APiResponse> createSavingsProduct(@Valid @RequestBody  SavingsProductPayload payload, HttpServletRequest request){
 
         SavingsProductModel savingsProductModel = savingsProductsService.createSavingsProduct(payload);
         return buildResponseEntity(HttpStatus.CREATED,savingsProductModel,request.getRequestURI());
