@@ -1,5 +1,7 @@
 package com.fiona.savingsManagementApi.Transaction.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fiona.savingsManagementApi.Customer.Model.CustomerModel;
 import com.fiona.savingsManagementApi.SavingsProduct.model.SavingsProductModel;
 import jakarta.persistence.*;
@@ -7,6 +9,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Immutable;
 
 
 import java.time.LocalDateTime;
@@ -18,6 +21,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Table(name = "transactions")
 @Entity
+@Immutable
 public class TransactionModel {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -36,6 +40,7 @@ public class TransactionModel {
     private CustomerModel customerModel;
     @ManyToOne
     @JoinColumn(name="savings_product_id")
+    @JsonManagedReference
     private SavingsProductModel savingsProductModel;
     @PrePersist
     protected void onCreate(){
