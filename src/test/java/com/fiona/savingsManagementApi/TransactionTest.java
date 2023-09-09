@@ -14,19 +14,14 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -69,13 +64,12 @@ public class TransactionTest {
             transactionModel.setPaymentMethod(PaymentMethod.Mpesa);
             transactionModel.setAmount(10000);
             transactionModel.setCustomerModel(customerModel);
-//            transactionModel.setSavingsProductModel(savingsProductModel);
+            transactionModel.setSavingsProductModel(savingsProductModel);
 
 
             when(transactionRepository.save(any())).thenReturn(transactionModel);
 
             TransactionModel createdTransaction = transactionService.createTransaction(payload);
-
             Assertions.assertNotNull(createdTransaction);
     }
 
@@ -151,9 +145,6 @@ public class TransactionTest {
 
         assertEquals(totalSavingsReceivedList, retrievedTotalSavingsReceived);
 
-//        mockMvc.perform(get("/api/v1/savings/transactions/getTotalSavingsReceived/savingsProductId"))
-//                .andExpect(status().isOk())
-//                .andReturn();
     }
 
 }
