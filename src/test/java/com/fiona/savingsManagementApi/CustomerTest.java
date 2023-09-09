@@ -76,7 +76,6 @@ public class CustomerTest {
         customer1.setPhoneNumber("0765097810");
         customer1.setEmail("cathyCook@gmail.com");
 
-
         customer1.setSavingsProducts(Collections.emptyList());
 
         CustomerModel customerModel = new CustomerModel();
@@ -88,7 +87,7 @@ public class CustomerTest {
         customerModel.setPhoneNumber("0765097810");
         customerModel.setEmail("cathyCook@gmail.com");
         customerModel.setMemberNumber("M06520");
-        customerModel.setSavingsProducts(Collections.emptyList()); // Set an empty list of UUIDs
+        customerModel.setSavingsProducts(Collections.emptyList());
 
         when(customerRepository.save(any())).thenReturn(customerModel);
 
