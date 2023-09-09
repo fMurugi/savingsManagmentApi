@@ -1,13 +1,19 @@
 package com.fiona.savingsManagementApi;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fiona.savingsManagementApi.SavingsProduct.model.SavingsProductModel;
 import com.fiona.savingsManagementApi.SavingsProduct.payload.SavingsProductPayload;
 import com.fiona.savingsManagementApi.SavingsProduct.repository.SavingsProductsRepository;
 import com.fiona.savingsManagementApi.SavingsProduct.service.SavingsProductsService;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,17 +23,26 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
+@AutoConfigureMockMvc
 public class SavingsProductsTest {
     @MockBean
     private SavingsProductsRepository savingsProductsRepository;
     @Autowired
     private SavingsProductsService savingsProductsService;
 
+    @Autowired
+    private MockMvc mockMvc;
+    @Autowired
+    ObjectMapper objectMapper;
+
     @Test
-    public void createSavingsProductTest(){
+    public void createSavingsProductTest() throws Exception{
         SavingsProductPayload savingsProductPayload = new SavingsProductPayload();
         savingsProductPayload.setName("vacation");
 
