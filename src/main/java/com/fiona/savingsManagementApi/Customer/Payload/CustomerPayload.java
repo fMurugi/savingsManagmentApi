@@ -22,8 +22,8 @@ public class CustomerPayload {
     @NotBlank(message = "last name is required")
     private String lastName;
     @NotNull(message="national id is required")
-    @Min(value=8)
-    @Max(value = 8)
+//    @Min(value=8)
+//    @Max(value = 8)
     private int nationalId;
     @NotNull(message = "phone number is required")
     @Pattern(regexp = "^07\\d{8}$", message = "Invalid phone number format")
