@@ -10,6 +10,7 @@ import com.fiona.savingsManagementApi.Customer.service.CustomerService;
 import com.fiona.savingsManagementApi.SavingsProduct.model.SavingsProductModel;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -22,16 +23,19 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 @SpringBootTest
+@AutoConfigureMockMvc
 public class CustomerTest {
     @MockBean
     private CustomerRepository customerRepository;
     @Autowired
     private CustomerService customerService;
-//    @Autowired
-//    private MockMvc mockMvc;
+
+    @Autowired
+    private MockMvc mockMvc;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -80,7 +84,7 @@ public class CustomerTest {
         customerModel.setCustomerId(expectedCustomerId);
         customerModel.setFirstName("cathy");
         customerModel.setLastName("cook");
-        customerModel.setNationalId(23456780);
+        customerModel.setNationalId(2345670);
         customerModel.setPhoneNumber("0765097810");
         customerModel.setEmail("cathyCook@gmail.com");
         customerModel.setMemberNumber("M06520");
@@ -95,13 +99,75 @@ public class CustomerTest {
 //        assertEquals(expectedCustomerId, jsonNode.get("customerId").asText());
         assertEquals("cathy", jsonNode.get("firstName").asText());
         assertEquals("cook", jsonNode.get("lastName").asText());
-        assertEquals(23456780, jsonNode.get("nationalId").asInt());
+        assertEquals(2345670, jsonNode.get("nationalId").asInt());
         assertEquals("0765097810", jsonNode.get("phoneNumber").asText());
         assertEquals("cathyCook@gmail.com", jsonNode.get("email").asText());
         assertEquals("M06520", jsonNode.get("memberNumber").asText());
         assertTrue(jsonNode.get("savingsProducts").isArray());
         assertEquals(0, jsonNode.get("savingsProducts").size());
+
+//        String expectedJsonResponse = "{\"firstName\":\"cathy\",\"lastName\":\"cook\",\"nationalId\":2345670,\"phoneNumber\":\"0765097810\",\"email\":\"cathyCook@gmail.com\",\"memberNumber\":\"M06520\",\"savingsProducts\":[],\"customerId\":expectedCustomerId}";
+//        mockMvc.perform(MockMvcRequestBuilders
+//                        .post("/api/v1/savings/customers/createANewCustomer")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(objectMapper.writeValueAsString(customer1)))
+//                .andExpect(MockMvcResultMatchers.status().isOk())
+//                .andExpect(content().json(expectedJsonResponse));
+
     }
 
+    @Test
+    public void getOneCustomerTest(){
+        UUID customerId = UUID.randomUUID();
+
+        CustomerModel expectedCustomer =  new CustomerModel();
+        expectedCustomer.setCustomerId(customerId);
+        expectedCustomer.setFirstName("cathy");
+        expectedCustomer.setLastName("cook");
+        expectedCustomer.setNationalId(2345670);
+        expectedCustomer.setPhoneNumber("0765097810");
+        expectedCustomer.setEmail("cathyCook@gmail.com");
+        expectedCustomer.setMemberNumber("M06520");
+        expectedCustomer.setSavingsProducts(Collections.emptyList()); // Set an empty list of UUIDs
+
+        when(customerRepository.findById(customerId)).thenReturn(Optional.of(expectedCustomer));
+
+        CustomerModel actualCustomer = customerService.getOneCustomer(customerId);
+
+        assertEquals(expectedCustomer,actualCustomer);
+
+    }
+    @Test
+    public void deleteCustomerTest(){
+        UUID customerId = UUID.randomUUID();
+
+        customerService.deleteCustomer(customerId);
+        verify(customerRepository,times(1)).deleteById(customerId);
+    }
+
+    @Test
+    public void updateCustomerTest(){
+        UUID customerId = UUID.randomUUID();
+        CustomerPayload customer1 = new CustomerPayload();
+        customer1.setFirstName("cathy");
+        customer1.setLastName("cook");
+        customer1.setNationalId(23456780);
+        customer1.setPhoneNumber("0765097810");
+        customer1.setEmail("cathyCook@gmail.com");
+        customer1.setSavingsProducts(Collections.emptyList());
+
+        CustomerModel existingCustomer =  new CustomerModel();
+        when(customerRepository.findById(customerId)).thenReturn(Optional.of(existingCustomer));
+
+      CustomerModel updatedCustomer = customerService.updateCustomerModel(customer1,customerId);
+        //        assertEquals(expectedCustomerId, jsonNode.get("customerId").asText());
+        assertEquals("cathy", updatedCustomer.getFirstName());
+        assertEquals("cook", updatedCustomer.getLastName());
+        assertEquals(23456780, updatedCustomer.getNationalId());
+        assertEquals("0765097810", updatedCustomer.getPhoneNumber());
+        assertEquals("cathyCook@gmail.com", updatedCustomer.getEmail());
+        assertEquals("M06520", updatedCustomer.getMemberNumber());
+
+    }
 
 }
