@@ -3,11 +3,15 @@ package com.fiona.savingsManagementApi;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fiona.savingsManagementApi.Customer.Controller.CustomerController;
 import com.fiona.savingsManagementApi.Customer.Model.CustomerModel;
 import com.fiona.savingsManagementApi.Customer.Payload.CustomerPayload;
 import com.fiona.savingsManagementApi.Customer.repository.CustomerRepository;
 import com.fiona.savingsManagementApi.Customer.service.CustomerService;
 import com.fiona.savingsManagementApi.SavingsProduct.model.SavingsProductModel;
+import org.aspectj.lang.annotation.Before;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -17,6 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.*;
 
@@ -25,20 +30,29 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 public class CustomerTest {
-    @MockBean
-    private CustomerRepository customerRepository;
     @Autowired
     private CustomerService customerService;
+    @MockBean
+    private CustomerRepository customerRepository;
+
 
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
     private ObjectMapper objectMapper;
+
+//    @BeforeEach
+//    public void setup(){
+//        this.mockMvc = MockMvcBuilders
+//                .standaloneSetup(CustomerController.class)
+//                .build();
+//    }
 
     @Test
     public void testGetAllCustomers(){
@@ -65,6 +79,15 @@ public class CustomerTest {
 
         List<CustomerModel> actualCustomers = customerService.getAllCustomers();
         assertEquals(expectedCustomers,actualCustomers);
+    }
+    @Test
+    public void testGetCustomers() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                .get("/api/v1/savings/customers/getAllCustomers")
+                .accept("application/json")
+                .contentType("application/json"))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.*").exists());
     }
 
     @Test
