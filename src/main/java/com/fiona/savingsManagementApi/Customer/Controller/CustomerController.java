@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import static com.fiona.savingsManagementApi.utils.APIResponseBuilder.buildRespo
 @RestController
 @RequestMapping("api/v1/savings/customers")
 @AllArgsConstructor
+@NoArgsConstructor
 public class CustomerController {
     @Autowired
     private CustomerService customerService;

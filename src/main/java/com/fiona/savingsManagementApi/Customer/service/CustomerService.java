@@ -10,7 +10,9 @@ import com.fiona.savingsManagementApi.SavingsProduct.model.SavingsProductModel;
 import com.fiona.savingsManagementApi.SavingsProduct.payload.SavingsProductPayload;
 import com.fiona.savingsManagementApi.SavingsProduct.repository.SavingsProductsRepository;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
@@ -18,8 +20,11 @@ import java.util.*;
 
 @Service
 @AllArgsConstructor
+@NoArgsConstructor
 public class CustomerService {
+    @Autowired
     private CustomerRepository customerRepository;
+    @Autowired
     private SavingsProductsRepository savingsProductsRepository;
     private ObjectMapper objectMapper = new ObjectMapper();
     private static final Random random = new Random();
