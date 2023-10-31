@@ -2,12 +2,12 @@ server:
   port: 8070
 spring:
   datasource:
-    url: ${dbUrl}
-    username: ${dbUsername}
-    password: ${dbPassword}
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:sqlserver://savingsdbserver.database.windows.net:1433;database=savingsdb;user=fiona@savingsdbserver;password=password@123;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
+    username: fiona
+    password: password@123
+#    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
-    database-platform: org.hibernate.dialect.MySQLDialect
+    database-platform: org.hibernate.dialect.SQLServer2012Dialect
     show-sql: true
     hibernate:
       ddl-auto: update
